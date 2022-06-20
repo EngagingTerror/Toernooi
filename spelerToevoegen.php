@@ -1,49 +1,43 @@
 <?php
-  //I do this so I can use functions from functions.php
+  //Ik doe dit zodat ik functies uit functions.php kan gebruiken
   require "functions.php";
 
 
-  //make connection to Database for data :D
+  //verbinding maken met Database voor gegevens
+
   try{
     $db = new PDO("mysql:host=localhost;dbname=toernooi;", "root","");
   }
   catch(PDOException $exception)
   {
-    //echo any error with database
+    //echo elke fout met database
       echo $exception->getmessage();
   }
-    //SET VARIABLES--------------------------------------
+    
     $spelerCnt = getSpelerCnt($db);
 
-  //-------------------------------------------------------
 ?>
 
-<!-- set up HTML doctype, language, charsets to define page
- make connection to functions_js.js to use Javascript -->
+<!-- HTML-documenttype, taal, tekensets instellen om pagina te definiëren
+ maak verbinding met functions_js.js om Javascript te gebruiken
+ -->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta charset="utf-8">
-  <title>Spelers Registreren</title>
-  <meta name="description" content="toernooi v0">
+  <title>Spelers aanmelden</title>
   <script type="text/javascript" src="functions_js.js"></script>  
 </head>
-<!-- header with title -->
-<body class="back">
+<!-- header met titel -->
+<body>
 <center>
-<div class="box-link">
-      <a href="start.php"><h1 class="whitetext"> Homepagina </h1> </a>
-    </div>
-    <div class="holder">
-        <h1 class="title">Spelers registreren</h1>
-    </div>
-    <!-- table to registrate spelers with form-->
-  <div class="box-schools">
-        <?php 
-        postRegistrateFormPlayer($db, $spelerCnt);
-        ?>
-  </div>
+    <p><a href="start.php">Homepagina</a></p>
+    <h2>Spelers aanmelden</h2>
+    <!-- tafel om spelers in te schrijven met formulier-->
+    <?php 
+      postRegistrateFormPlayer($db, $spelerCnt);
+    ?>
 </center>
   </body>
 </html>

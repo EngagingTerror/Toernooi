@@ -1,17 +1,17 @@
 <?php
 
-//post 2 buttons
-//1 with create toernooi and 1 with choose toernooi
+//post 2 knoppen
+//1 met toernooi maken en 1 met toernooi kiezen
 function toernooiPage($db){
     //post form
     
-    //post table to make a new toernooi 
+    //post table om een ​​nieuw toernooi te maken
     if(isset($_POST["make"]))
     {
         postMakeToernooi($db);
     }
     else{
-        //button that makes new toernooi
+        //knop die een nieuw toernooi maakt
         if(isset($_POST["toernooiSubmit"])){
             //get posted variables
             $toernooiname = $_POST["toernooiName"];
@@ -21,44 +21,45 @@ function toernooiPage($db){
                 //insert toernooi
                 insertToernooi($toernooiname, $omschrijving, $db);
                 $toernooi_id = getIdFromToernooiName($toernooiname, $db);
-                //make a table to assign spelers to a toernooi
+                //maak een tafel om spelers toe te wijzen aan een toernooi
                 postAanmelden($toernooi_id, $db);
 
             }
         }
         else{
-            //check if aanmelding button is pressed
+            //controleer of de aanmeldingsknop is ingedrukt
             if(isset($_POST["meldAan"])){
                 
-                //check if there are checkboxes toggled
+                //controleer of er selectievakjes zijn ingeschakeld
                 if(isset($_POST["speler_id"])){
-                //get ID's to upload into the aanmeldingen table
+                //ID's ophalen om te uploaden naar de aanmeldingstabel
                         $toernooiId = $_POST["hiddenToernooi"];
                         $spelerIdArr = $_POST["speler_id"];
                         $succesfulQueries = 0;
-                //put each speler into aanmeldingen 
+                //zet elke speler in aanmeldingen 
                     foreach($spelerIdArr as $spelerId){
                         if(insertAanmelding($spelerId, $toernooiId, $db))
                         {
                             $succesfulQueries++;
                         }
                     }
-                    //check if all queries went well
-                    //amount of successful queries = the amount of selected spelerID's
+                    //controleer of alle vragen goed zijn gegaan
+                    //aantal succesvolle queries = het aantal geselecteerde speler-ID's
                     if($succesfulQueries==count($spelerIdArr)){
                         ?><br><div class="box-terug"><h2> Toernooi is aangemaakt en spelers zijn aangemeld</h2><br><a class="whitetext" href="toernooi.php"> Terug </a><br><br></div><?php
                     }
                     else{
                         ?><br><div class="box-terug"><h2> Er is iets fout gegaan :(</h2><br><a class="whitetext" href="toernooi.php"> Terug </a><br><br></div><?php
                     }
-                    //organize all wedstrijden in toernooi
+                    //organiseer alle wedstrijden in toernooi
                     makeWedstrijden($toernooiId,$db);
                     header("Location: toernooiInzien.php?t=".$toernooiId);
                 }
                 
             }
             else{
-                //post table with buttons to make a new toernooi and to choose a toernooi?>
+                //post table met knoppen om een ​​nieuw toernooi te maken en een toernooi te kiezen
+                ?>
                 <div class="box-table2">
                 <form action="" method="post">
                         <br>
@@ -77,16 +78,15 @@ function toernooiPage($db){
 
 }
 
-//post table to make toernooi
+//post table om een ​​toernooi te maken
 function postMakeToernooi($db){
-    //first post a form to insert a toernooi
+    //post eerst een form om een ​​toernooi in te voegenpost eerst een formulier om een ​​toernooi in te voegen
     ?>
     <div class="box-table2">
     <form method="post" action=""> 
-        <h1>Toernooi naam:</h1>
-        <input type="text" class="text-input" name="toernooiName">
+        <h2>Toernooi naam:<input type="text" class="text-input" name="toernooiName"></h2>
         <br><br>
-        <h1>Toernooi omschrijving:</h1>
+        <h2>Toernooi omschrijving</h2>
         <textarea name="omschrijving" rows="5" cols="40"></textarea>
         <br><br>
         <input type="submit" class="submit-btn" name="toernooiSubmit" value="Maak toernooi">
@@ -95,28 +95,28 @@ function postMakeToernooi($db){
     <?php
 }
 
-//check if toernooi variables are valid
+//controleer of toernooivariabelen geldig zijn
 function checkToernooi($toernooiname, $omschrijving, $db){
 
-    //check if there's a name
+    //kijk of er een naam is
     if(!$toernooiname){
         echo "<h2> Toernooi naam is niet opgegeven!</h2>";
         return false;
     }
     else{
-        //check if toernooiname is correct length
+        //controleer of toernooinaam de juiste lengte heeft
         if(strlen($toernooiname)>50){
             ?><br><div class="box-terug"><h2> Toernooi naam is te lang! (max 50)</h2><br><a class="whitetext" href="toernooi.php"> Terug </a><br><br></div><?php
             return false;
         }
         else{
-            //check if $omschrijving is correct length
+            //controleer of $omschrijving de juiste lengte heeft
             if(strlen($omschrijving)>100){
                 ?><br><div class="box-terug"><h2> Omschrijving is te lang! (max 100)</h2><br><a class="whitetext" href="toernooi.php"> Terug </a><br><br></div><?php
                 return false;
             }
             else{
-                //check if toernooi table contains $toernooiname
+                //controleer of toernooitabel $toernooiname bevat
                 if(TableHas("toernooi", $toernooiname, "toernooi_naam", $db)){
                     ?><br><div class="box-terug"><h2> Toernooi bestaat al, probeer een andere naam</h2><br><a class="whitetext" href="toernooi.php"> Terug </a><br><br></div><?php
                     return false;
@@ -130,13 +130,13 @@ function checkToernooi($toernooiname, $omschrijving, $db){
     }
 }
 
-//inserts $toernooiname and $omschrijving into toernooi table
+//voegt $toernooinaam en $omschrijving toe aan toernooitabel
 function insertToernooi($toernooiname, $omschrijving, $db){
     $queryToernooi = $db->prepare("insert into toernooi set toernooi_naam=?, omschrijving=?");
     $queryToernooi->execute(array($toernooiname, $omschrijving));
 }
 
-//inserts $spelerId and $toernooiId into aanmeldingen table
+//voegt $spelerId en $toernooiId toe aan aanmeldingstabel
 function insertAanmelding($spelerId, $toernooiId, $db){
     $queryAanmelding = $db->prepare("insert into aanmeldingen set speler_id=?, toernooi_id=?");
     $result = $queryAanmelding->execute(array($spelerId, $toernooiId));
@@ -147,17 +147,17 @@ function insertAanmelding($spelerId, $toernooiId, $db){
         return false;
     }
 }
-//gets ID from toernooi
+//krijgt ID van toernooi
 function getIdFromToernooiName($name, $db)
 {
-  //query to select toernooi_id
+  //vraag om toernooi_id te selecteren
   $querySelect = $db->prepare("select toernooi_id from toernooi where toernooi_naam=?");
   $querySelect->execute(array($name));
-  //number of results from the query
+  //aantal resultaten van de query
   $rows = $querySelect->rowCount();
-  //if there are rows that means  there is acolomn with given name
+  //als er rijen zijn, betekent dit dat er een kolom is met de opgegeven naam
   if($rows>0) {
-        //get the fetched result, this result will return an array instead of an PDO 
+        //haal het opgehaalde resultaat op, dit resultaat retourneert een array in plaats van een PDO 
         $fetch= $querySelect->fetch(PDO::FETCH_ASSOC);
         $idRes = $fetch["toernooi_id"];
         return $idRes;
@@ -168,14 +168,14 @@ function getIdFromToernooiName($name, $db)
 
 }
 
-//get each speler and with a check box to assign speler to toernooi with an insert 
-//into the aanmeldingen table
+//krijg elke speler en met een selectievakje om speler toe te wijzen aan toernooi met een insert
+//naar de aanmeldingen tafel
 function postAanmelden($toernooiId, $db){
-     //query to get each player with a school
+     //query om elke speler met een school te krijgen
      ?>
         <div class="box-players">
             <?php
-            //post name, desc and date of toernooi
+            //post naam, beschrijving en datum toernooi
             $toernooi = getToernooiById($toernooiId, $db);
             ?>
             <h2> Toernooinaam: <?php echo $toernooi["toernooi_naam"];?></h2>
@@ -185,7 +185,7 @@ function postAanmelden($toernooiId, $db){
         <div class="box-players">
          <form method="post" action="">
              <br>
-             <!-- with this hidden ID I will use to upload the aanmeldingen-->
+             <!-- met deze verborgen ID zal ik gebruiken om de aanmeldingen te uploaden-->
              <input type="hidden" value="<?php echo $toernooiId?>" name="hiddenToernooi">
 
             <input type="submit" name="meldAan" value="Meld gecheckte spelers aan" class="submit-btn">
@@ -196,7 +196,7 @@ function postAanmelden($toernooiId, $db){
             $querySpeScho = $db->prepare("SELECT spelers.*, schoolnaam FROM `spelers` INNER JOIN scholen ON spelers.school_id = scholen.school_id");
             $querySpeScho->execute();
             foreach($querySpeScho as $player){
-                //post form with player by post voornaam+tussen+achternaam and school
+                //post formulier met speler per post voornaam+tussen+achternaam en school
                 ?>
                 <div class="box-players">
                 <h2> Naam: <?php echo $player["voornaam"]." ".$player["tussenvoegsel"]." ".$player["achternaam"];?></h2>
@@ -210,16 +210,16 @@ function postAanmelden($toernooiId, $db){
             <?php
 }
 
-//returns fetched result of toernooi with id $idToer
+//geeft het opgehaalde resultaat van het toernooi terug met id $idToer
 function getToernooiById($idToer, $db){
-      //query to select toernooi_id
+      //query om toernooi_id te selecteren
   $querySelect = $db->prepare("select * from toernooi where toernooi_id=?");
   $querySelect->execute(array($idToer));
-  //number of results from the query
+  //aantal resultaten van de query
   $rows = $querySelect->rowCount();
-  //if there are rows that means  there is acolomn with given name
+  //als er rijen zijn, betekent dit dat er een kolom is met de opgegeven naam
   if($rows>0) {
-        //get the fetched result, this result will return an array instead of an PDO 
+        //haal het opgehaalde resultaat op, dit resultaat retourneert een array in plaats van een PDO 
         $fetch= $querySelect->fetch(PDO::FETCH_ASSOC);
         return $fetch;
   }
@@ -228,36 +228,36 @@ function getToernooiById($idToer, $db){
   }
 }
 
-//post a form where user can pick a toernooi
+//plaats een formulier waar de gebruiker een toernooi kan kiezen
 function chooseToernooi($link,$db){
-    ?> <h1> Kies toernooi: </h1> <?php
+    ?> <h2> Kies toernooi: </h2> <?php
     $link = $link."?t=";
-    //query to select each toernooi
+    //query om elk toernooi te selecteren
     $queryToernooi = $db->prepare("select * from toernooi");
     $queryToernooi->execute();
     foreach($queryToernooi as $toernooi){
-        //post a div with $link with the toernooi_id
+        //post een div met $link met de toernooi_id
         ?>
         <div class="box-toernooien">
-        <h2> Toernooi naam: <?php echo $toernooi["toernooi_naam"];?></h2>
-        <h2> Omschrijving: <?php echo $toernooi["omschrijving"]; ?></h2>
-        <h2> Datum: <?php echo $toernooi["datum"]; ?></h2>
-        <div class="submit-btn2"><a style="margin-left:10%;" href="<?php echo $link.$toernooi["toernooi_id"];?>" class="whitetext">Kies Toernooi</a></div>
+        <h3> Toernooi naam: <?php echo $toernooi["toernooi_naam"];?></h3>
+        <h3> Omschrijving: <?php echo $toernooi["omschrijving"]; ?></h3>
+        <h3> Datum: <?php echo $toernooi["datum"]; ?></h3>
+        <div class="submit-btn2"><a href="<?php echo $link.$toernooi["toernooi_id"];?>" class="whitetext">Kies Toernooi</a></div>
         </div>
         <?php
     }
 }
 
-//post toernooi table with a toernooiID of $idT
+//post toernooitabel met een toernooiID van $idT
 //
-// Get max ronde from toernooi
-// 
-// for loop until max ronde 
-//  get all wedstrijden with i'th ronde
-//  post result in a <div>
+// Haal max ronde uit toernooi
+//
+// for loop tot max ronde
+// haal alle wedstrijden met i'th ronde
+// post resultaat in een <div>
 function postToernooi($idT, $db){
-     //also post a box for the winner of the tournament
-     //query to get winner of tournament
+     //post ook een box voor de winnaar van het toernooi
+     //query om de winnaar van het toernooi te krijgen
      $queryGetWinner = $db->prepare("SELECT * FROM toernooi INNER JOIN spelers ON toernooi.winnaar_id = spelers.speler_id WHERE toernooi_id=?");
      $queryGetWinner->execute(array($idT));
      $fetchWinner = $queryGetWinner->fetch(PDO::FETCH_ASSOC);
@@ -266,27 +266,27 @@ function postToernooi($idT, $db){
          <h1> Winnaar toernooi: <?php echo $fetchWinner["voornaam"]." ".$fetchWinner["tussenvoegsel"]." ".$fetchWinner["achternaam"];?></h1> 
      <?php
      }
-    //query to get highest round
+    //vraag om de hoogste ronde te krijgen
     $queryGetHighestRound = $db->prepare("SELECT MAX(ronde) as ronde FROM wedstrijd WHERE toernooi_id=?");
     $queryGetHighestRound->execute(array($idT));
-    //fetch highest round
+    //hoogste ronde halen
     $fetchRound = $queryGetHighestRound->fetch(PDO::FETCH_ASSOC);
     $highestRound = $fetchRound["ronde"];
-    //check if there are any rounds, if not there are no games for this tournament
+    //controleer of er rondes zijn, zo niet, dan zijn er geen spellen voor dit toernooi
      if($highestRound){
-        //loop over each round
+        //lus over elke ronde
         for($i=0;$i<$highestRound; $i++){
-            //post div for each round
+            //post div voor elke ronde
             ?>
             <div class="box-round">
                 <div class="ronde"><h1> Ronde: <?php echo $i+1; ?> </h1>
             </div>
             <?php
-            //get wedstrijden from i'th round
+            //krijg wedstrijden vanaf de eerste ronde
             $queryGetWedstrijden = $db->prepare("SELECT * FROM wedstrijd WHERE toernooi_id=? AND ronde=? ORDER BY winnaar_id ASC, baan ASC");
-            //$i+1 because $i starts at 0
+            //$i+1 omdat $i begint bij 0
             $queryGetWedstrijden->execute(array($idT, $i+1));
-            //post all wedstrijden
+            //post alle wedstrijden
             foreach ($queryGetWedstrijden as $wedstrijd){
                 $speler1 = getSpelerByID($wedstrijd["speler1_id"], $db);
                 $speler2 = getSpelerByID($wedstrijd["speler2_id"], $db);
@@ -296,16 +296,16 @@ function postToernooi($idT, $db){
                 ?>
                 <div class="box-wedstrijden2">
                 <?php
-                //check if speler 1 is a null value if it is, it is a free pass
+                //controleer of speler 1 een null-waarde is als dat zo is, is het een free pass
                 if($speler1){
-                    //check if speler1 is winner then make his name green
+                    //check of speler1 winnaar is maak dan zijn naam groen
                     if($wedstrijd["winnaar_id"] == $wedstrijd["speler1_id"]){
                         ?>
                         <h3 class="green">  <?php echo $speler1["voornaam"]." ".$speler1["tussenvoegsel"]." ".$speler1["achternaam"];?></h3>
                         <h3 class="green">School: <?php echo $speler1["schoolnaam"]; ?></h3><?php
                     }
                     else{
-                            //if there is a winnaar then speler 2 is winnaar meaning this is the loser, make their name red
+                            //als er een winnaar is, dan is speler 2 winnaar, wat betekent dat dit de verliezer is, maak hun naam rood
                         if($winnaar){
                             ?>
                             <h3 class="red"> <?php echo $speler1["voornaam"]." ".$speler1["tussenvoegsel"]." ".$speler1["achternaam"];?></h3>
@@ -320,7 +320,7 @@ function postToernooi($idT, $db){
                         }
                     }
                 }
-                //if there is no speler it is a free pass
+                //als er geen speler is, is het een free pass
                 else{
                 ?>
                     <h3 style="color:blue; text-align: center;">  Bot</h3>
@@ -329,9 +329,9 @@ function postToernooi($idT, $db){
                 ?>
                     <h1 class="tp1"> VS </h1>
                 <?php
-                //also do this for speler2
+                //doe dit ook voor speler2
                 if($speler2){
-                    //check if speler 2 is winnaar then make their name green
+                    //controleer of speler 2 winnaar is en maak dan hun naam groen
                     if($wedstrijd["winnaar_id"] == $wedstrijd["speler2_id"]){
                         ?>
                         <h3 class="green"><?php echo $speler2["voornaam"]." ".$speler2["tussenvoegsel"]." ".$speler2["achternaam"];?></h3>
@@ -339,7 +339,7 @@ function postToernooi($idT, $db){
                         <?php
                     }
                     else{
-                        //if there is a winnaar then speler 1 is winnaar meaning this is the loser, make their name red
+                        //als er een winnaar is, dan is speler 1 winnaar, wat betekent dat dit de verliezer is, maak hun naam rood
                         if($winnaar){
                             ?>
                             <h3 class="red">  <?php echo $speler2["voornaam"]." ".$speler2["tussenvoegsel"]." ".$speler2["achternaam"];?></h3>
@@ -354,14 +354,14 @@ function postToernooi($idT, $db){
                         }
                     }
                 }
-                //if there is no speler its a free pass
+                //als er geen speler is, is het een free pass
                 else{
                         ?>
                 <h3 style="color:blue; text-align: center;"> Bot</h3>
                         <?php
                 }
 
-                //check if there is a winner, then post the winner
+                //check of er een winnaar is, post dan de winnaar
                 if($winnaar){
                     ?>
                     <h3 class="green"> Winnaar: <?php echo $winnaar["voornaam"]." ".$winnaar["tussenvoegsel"]." ".$winnaar["achternaam"];?></h3>
@@ -373,21 +373,21 @@ function postToernooi($idT, $db){
                     <?php
                 }
 
-                //check if the game has scores
+                //controleer of het spel scores heeft
                 if($wedstrijd["score1"]>-1){
                     //post score
                     ?>
                     <h3 style="color: purple"> Score: <?php echo $wedstrijd["score1"]."-".$wedstrijd["score2"];?></h3>
                     <?php
                 }
-                //Game has no score
+                //Spel heeft geen score
                 else{
                     ?>
                         <h3 style="color: purple"> Score: No Score</h3> 
                     <?php
                     
                 }
-                //4.2.2 check if there's a baan
+                //4.2.2 check of er een baan is
                 if($baan){
                     //post baan
                     ?>
@@ -421,50 +421,46 @@ function postToernooi($idT, $db){
 
 }
 
-///------------------
-/// WEDSTRIJDEM
-///------------------
-
-//organize wedstrijden from toernooi with id $toernooiId
+//organiseer wedstrijden van toernooi met id $toernooiId
 function makeWedstrijden($toernooiId,$db){
-    //get array for banen to use
+    //krijg array voor banen om te gebruiken
     $baanArr = getTennisBanen($db);
-    //get an array with all spelers and dummy spelers
+    //krijg een array met alle spelers en dummy spelers
     $spelerArr = getSpelerArr($toernooiId, $db);
-    //get each 2 player from array
-    //loop over array 
-    // get i'th element
-    // get i+1th element
+    //haal elke 2 speler uit de array
+    //loop over array
+    // krijg ik het element
+    // krijg i+1e element
     for($i=0; $i<count($spelerArr)-1; $i+=2){
         echo $spelerArr[$i]["voornaam"]." ".$spelerArr[$i+1]["voornaam"]."//";
-        //make a wedstrijd
+        //maak een wedstrijd
         insertIntoWedstrijdTable($toernooiId,$spelerArr[$i]["speler_id"], $spelerArr[$i+1]["speler_id"], $db, $baanArr);
     }
 
 }
 
-//insert a first round wedstrijd into the wedstrijd table with given parameters
+//voeg een eerste ronde wedstrijd in de wedstrijdtabel in met gegeven parameters
 function insertIntoWedstrijdTable($toernooiId, $speler1, $speler2, $db, $baanArr){
     
-    //check if speler1 is a dummy
+    //check of speler1 een dummy is
     if($speler1==0){
         $queryWed = $db->prepare("insert into wedstrijd set toernooi_id=?, ronde=1, speler2_id=?, winnaar_id=?");
-        //insert westrijd with $toernooiId, $speler2,  winner is speler 2
+        //voeg westrijd in met $toernooiId, $speler2, winnaar is speler 2
         $queryWed->execute(array($toernooiId,$speler2, $speler2));
     }
     else{
-        //check if speler2 is a dummy
+        //check of speler2 een dummy is
         if($speler2==0){
             $queryWed = $db->prepare("insert into wedstrijd set toernooi_id=?, ronde=1, speler1_id=?, winnaar_id=?");
-            //insert westrijd with $toernooiId, $speler1, winner is speler 1
+            //voeg westrijd in met $toernooiId, $speler1, winnaar is speler 1
             $queryWed->execute(array($toernooiId,$speler1, $speler1));
         }
         else{
-            //both spelers are not dummies
-            //get next index of baanarray
+            //beide spelers zijn geen dummies
+            //haal volgende index van baanarray
             $baan = getNext($baanArr);
             $queryWed = $db->prepare("insert into wedstrijd set toernooi_id=?, ronde=1, speler1_id=?, speler2_id=?, baan=?");
-            //3.1.4 insert westrijd with $toernooiId, $speler1, $speler2, no winner, with an id of baan
+            //3.1.4 voeg westrijd in met $toernooiId, $speler1, $speler2, geen winnaar, met een id van baan
             $queryWed->execute(array($toernooiId, $speler1,$speler2, $baan["baan_id"]));
         }
     }
@@ -472,15 +468,15 @@ function insertIntoWedstrijdTable($toernooiId, $speler1, $speler2, $db, $baanArr
 }
 
 ///---
-// make an array
-// Get each aanmelding with given toernooi id
-// SELECT * FROM `aanmeldingen` where toernooi_id = ?
-// Get each speler with id of result
-// for each ($result){
-// insert into array result of this -> (SELECT * FROM `spelers` where toernooi_id = $result["speler_id"])
+// maak een array
+// Krijg elke aanmelding met opgegeven toernooi-id
+// SELECT * FROM `aanmeldingen` waar toernooi_id = ?
+// Krijg elke speler met id van resultaat
+// voor elke ($resultaat){
+// insert in array resultaat van dit -> (SELECT * FROM `spelers` waar toernooi_id = $result["speler_id"])
 // }
-// Add dummies to make array complete of players
-// either 2,4,8,16,32,64 or 128 as total count
+// Voeg dummies toe om de array compleet te maken met spelers
+// ofwel 2,4,8,16,32,64 of 128 als totaal aantal
 function getSpelerArr($toernooiId, $db){
 
     $playerArr = array();
@@ -498,16 +494,16 @@ function getSpelerArr($toernooiId, $db){
 }
 
 //-------
-//decide count of dummy array
-//  start a count of 1, while the count is smaller than pArr.length
-//  count*2
-//make a dummy player
-// { ["speler_id"]=> string(1) "0" ["voornaam"]=> string(5) "dummy " ["tussenvoegsel"]=> 
+//bepaal het aantal dummy-arrays
+// begin een telling van 1, terwijl de telling kleiner is dan pArr.length
+// tel*2
+// maak een dummy speler
+// { ["speler_id"]=> string(1) "0" ["voornaam"]=> string(5) "dummy" ["tussenvoegsel"]=>
 // string(6) "" ["achternaam"]=> string(4) "Dummy" ["school_id"]=> string(1) "test" }
 //
-//while the dummyArray<finalCnt
-//insert dummy into dummyArray
-// check if not 2 dummy's after each other otherwise you'll get Dummy vs Dummy that's stupid
+// terwijl de dummyArray <finalCnt
+//voeg dummy in dummyArray in
+// controleer of er niet 2 dummy's achter elkaar zijn, anders krijg je Dummy vs Dummy, dat is dom
 function getDummyArray($pArr){
 
     $dummyArray = $pArr;
@@ -540,11 +536,11 @@ function getDummyArray($pArr){
 }
 
 //-----
-//checks if there are 2 dummies after each other in $arr
-// check the previous player
-// loop over every element in $arr
-// get the speler_id
-// check if speler_id is equal to element["speler_id"]
+//controleert of er 2 dummies achter elkaar staan ​​in $arr
+// controleer de vorige speler
+// loop over elk element in $arr
+// verkrijg de speler_id
+// controleer of speler_id gelijk is aan element["speler_id"]
 function isRandomDummy($arr){
 
     for($i=0; $i<count($arr)-1;$i+=2){
@@ -556,36 +552,36 @@ function isRandomDummy($arr){
     return true;
 }
 
-//post the wedstrijden of current round with $toernooiId
+//post de wedstrijden van de huidige ronde met $toernooiId
 function postWedstrijden($toernooiId, $db){
-    //get the lowest round with no winner
-    //this is the current round
+    //haal de laagste ronde zonder winnaar
+    //dit is de huidige ronde
     $queryCurrRound = $db->prepare("SELECT * FROM `wedstrijd` WHERE toernooi_id='".$toernooiId."' 
     AND ronde = (SELECT MIN(ronde) FROM wedstrijd WHERE toernooi_id='".$toernooiId."' AND winnaar_id IS NULL) ORDER BY `wedstrijd`.`winnaar_id` ASC, baan ASC");
     $queryCurrRound->execute(array());
 
-    //Query to post current round in <h1>Ronde</h1>
+    //Query om huidige ronde te posten in <h1>Ronde</h1>
     $queryGetRonde = $db->prepare("SELECT * FROM `wedstrijd` WHERE toernooi_id='".$toernooiId."' 
     AND ronde = (SELECT MIN(ronde) FROM wedstrijd WHERE toernooi_id='".$toernooiId."' AND winnaar_id IS NULL) ORDER BY `wedstrijd`.`winnaar_id` ASC");
     $queryGetRonde->execute(array()); 
     $fetchRonde = $queryGetRonde->fetch(PDO::FETCH_ASSOC);
     $rowsRonde = $queryGetRonde->rowCount();
 
-    //only post update button if there are rounds left
+    //alleen post update-knop als er rondes over zijn
     if($rowsRonde>0){
-    //submit values from each <select> with this buttons
+    //verzend waarden van elke <select> met deze knoppen
     ?> 
     <button onclick="submitValues();" class="submit-btn4"> Update Scores </button>
     <button class="submit-btn" style="padding:10px;" onclick="location.reload();">Next Round -></button>
     <?php 
     }
 
-    //check if there are any rounds left
+    //check of er nog rondes over zijn
     if($rowsRonde>0)
     {
         ?>
         <h1>Ronde: <?php echo $fetchRonde["ronde"];?></h1>
-        <!-- hidden ID to post with updated wedstrijd -->
+        <!-- hidden ID om te posten met bijgewerkte wedstrijd -->
         <?php
         $count = 0;
         $array = array();
@@ -595,9 +591,9 @@ function postWedstrijden($toernooiId, $db){
             $speler1 = getSpelerByID($wedstrijd["speler1_id"], $db);
             $speler2 = getSpelerByID($wedstrijd["speler2_id"], $db);
             $winnaar = getSpelerByID($wedstrijd["winnaar_id"], $db);
-            //4.2.1 get baan per wedstrijd
+            //4.2.1 krijg baan per wedstrijd
             $baan = getBaanByID($wedstrijd["baan"], $db);
-            //if there's a winaar make it dark so the user knows this game has been played already
+            //als er een winaar is, maak het dan donker zodat de gebruiker weet dat dit spel al gespeeld is
             if(!$winnaar){
             ?>
             <div class="box-wedstrijden">
@@ -611,96 +607,96 @@ function postWedstrijden($toernooiId, $db){
                 <h2 class="green"> Ronde: <?php echo $wedstrijd["ronde"]; ?></h2>
                 <?php  
             }
-            //check if speler 1 is a null value if it is, it is a free pass
+            //controleer of speler 1 een null-waarde is als dat zo is, is het een free pass
             if($speler1){
-                //check if speler1 is winner then make his name green
+                //check of speler1 winnaar is maak dan zijn naam groen
                 if($wedstrijd["winnaar_id"] == $wedstrijd["speler1_id"]){
                     ?>
-                    <h2 class="green"> <?php echo $speler1["voornaam"]." ".$speler1["tussenvoegsel"]." ".$speler1["achternaam"];?></h2>
-                    <h2 class="green"> <?php echo $speler1["schoolnaam"]; ?></h2><?php
+                    <h3 class="green"> <?php echo $speler1["voornaam"]." ".$speler1["tussenvoegsel"]." ".$speler1["achternaam"];?></h3>
+                    <h3 class="green"> <?php echo $speler1["schoolnaam"]; ?></h3><?php
                 }
                 else{
-                //if there is a winnaar then speler 2 is winnaar meaning this is the loser, make their name red
+                //als er een winnaar is, dan is speler 2 winnaar, wat betekent dat dit de verliezer is, maak hun naam rood
                     if($winnaar){
                         ?>
-                        <h2 class="red">  <?php echo $speler1["voornaam"]." ".$speler1["tussenvoegsel"]." ".$speler1["achternaam"];?></h2>
-                        <h2 class="red"> School:  <?php echo $speler1["schoolnaam"]; ?></h2>
+                        <h3 class="red">  <?php echo $speler1["voornaam"]." ".$speler1["tussenvoegsel"]." ".$speler1["achternaam"];?></h3>
+                        <h3 class="red"> School:  <?php echo $speler1["schoolnaam"]; ?></h3>
                         <?php
                     }
                     else{
                         ?>
-                        <h2>  <?php echo $speler1["voornaam"]." ".$speler1["tussenvoegsel"]." ".$speler1["achternaam"];?></h2>
-                        <h2> School:  <?php echo $speler1["schoolnaam"]; ?></h2>
+                        <h3>  <?php echo $speler1["voornaam"]." ".$speler1["tussenvoegsel"]." ".$speler1["achternaam"];?></h3>
+                        <h3> School:  <?php echo $speler1["schoolnaam"]; ?></h3>
                         <?php 
                     }
                 }
             }
-            //if there is no speler it is a free pass
+            //als er geen speler is, is het een free pass
             else{
             ?>
-                <h2 style="color:blue; text-align: center;">   Bot</h2>
+                <h3 style="color:blue; text-align: center;">   Bot</h3>
             <?php
             }
             ?>
-                <h1 class="tp1"> VS </h1>
+                <h2 class="tp1"> VS </h2>
             <?php
-            //also do this for speler2
+            //doe dit ook voor speler2
             if($speler2){
-                //check if speler 2 is winnaar then make their name green
+                //controleer of speler 2 winnaar is en maak dan hun naam groen
                 if($wedstrijd["winnaar_id"] == $wedstrijd["speler2_id"]){
                     ?>
-                    <h2 class="green">  <?php echo $speler2["voornaam"]." ".$speler2["tussenvoegsel"]." ".$speler2["achternaam"];?></h2>
-                    <h2 class="green"> School:  <?php echo $speler2["schoolnaam"]; ?></h2>
+                    <h3 class="green">  <?php echo $speler2["voornaam"]." ".$speler2["tussenvoegsel"]." ".$speler2["achternaam"];?></h3>
+                    <h3 class="green"> School:  <?php echo $speler2["schoolnaam"]; ?></h3>
                     <?php
                 }
                 else{
-                    //if there is a winnaar then speler 1 is winnaar meaning this is the loser, make their name red
+                    //als er een winnaar is, dan is speler 1 winnaar, wat betekent dat dit de verliezer is, maak hun naam rood
                     if($winnaar){
                         ?>
-                        <h2 class="red">  <?php echo $speler2["voornaam"]." ".$speler2["tussenvoegsel"]." ".$speler2["achternaam"];?></h2>
-                        <h2 class="red"> School:  <?php echo $speler2["schoolnaam"]; ?></h2>
+                        <h3 class="red">  <?php echo $speler2["voornaam"]." ".$speler2["tussenvoegsel"]." ".$speler2["achternaam"];?></h3>
+                        <h3 class="red"> School:  <?php echo $speler2["schoolnaam"]; ?></h3>
                         <?php
                     }
                     else{
                 ?>
-                    <h2>  <?php echo $speler2["voornaam"]." ".$speler2["tussenvoegsel"]." ".$speler2["achternaam"];?></h2>
-                    <h2> School:  <?php echo $speler2["schoolnaam"]; ?></h2>
+                    <h3>  <?php echo $speler2["voornaam"]." ".$speler2["tussenvoegsel"]." ".$speler2["achternaam"];?></h3>
+                    <h3> School:  <?php echo $speler2["schoolnaam"]; ?></h3>
                 <?php 
                     }
                 }
             }
-            //if there is no speler its a free pass
+            //als er geen speler is, is het een free pass
             else{
                     ?>
-            <h2 style="color:blue; text-align: center;">  Bot</h2>
+            <h3 style="color:blue; text-align: center;">  Bot</h3>
                     <?php
             }
-            //check if there is a winner, then post the winner
+            //check of er een winnaar is, post dan de winnaar
             if($winnaar){
                 ?>
-                <h2 class="green"> Winnaar: <?php echo $winnaar["voornaam"]." ".$winnaar["tussenvoegsel"]." ".$winnaar["achternaam"];?></h2>
+                <h3 class="green"> Winnaar: <?php echo $winnaar["voornaam"]." ".$winnaar["tussenvoegsel"]." ".$winnaar["achternaam"];?></h3>
                 <?php
             }
             else{
                 ?>
-                <h2 class="green"> Winnaar: Geen Winnaar</h2>
+                <h3 class="green"> Winnaar: Geen Winnaar</h3>
                 <?php
             }
 
-            //check if the game has scores
+            //controleer of het spel scores heeft
             if($wedstrijd["score1"]>-1){
                 //post score
                 ?>
-                <h2 style="color: purple"> Score: <?php echo $wedstrijd["score1"]."-".$wedstrijd["score2"];?></h2>
+                <h3 style="color: purple"> Score: <?php echo $wedstrijd["score1"]."-".$wedstrijd["score2"];?></h3>
                 <?php
             }
-            //post a form where the user can choose a score (drop down menu)
+            //post een formulier waar de gebruiker een score kan kiezen (drop down menu)
             else{
-                //check if there's a dummy
+                //controleer of er een dummy is
                 if($speler1&&$speler2){
-                    //post drop down menu with possible scores
+                    //post drop-down menu met mogelijke scores
                     ?>
-                    <h2 style="color: purple"> Score: </h2>
+                    <h3 style="color: purple"> Score: </h3>
                     <select name="score[]" class="text-input2" id="<?php echo $wedstrijd["wedstrijd_id"];?>">
                         <option> 3 - 0 </option>
                         <option> 0 - 3 </option>
@@ -712,21 +708,21 @@ function postWedstrijden($toernooiId, $db){
                 }
                 else{
                 ?>
-                    <h2 style="color: purple"> Score: No Score</h2> 
+                    <h3 style="color: purple"> Score: No Score</h3> 
                 <?php
                 }
             }
-            //4.1.2 check if there's a baan
+            //4.1.2 check of er een baan is
             if($baan){
                 //post baan
                 ?>
-                <h2 style="color: #4CAF50"> Baan: <?php echo $baan ?></h2> 
+                <h3 style="color: #4CAF50"> Baan: <?php echo $baan ?></h3> 
             <?php
             }
             else{
                 //no baan
                 ?>
-                <h2 style="color: #4CAF50"> Baan: Geen baan</h2> 
+                <h3 style="color: #4CAF50"> Baan: Geen baan</h3> 
             <?php
             }
             ?>
@@ -736,7 +732,7 @@ function postWedstrijden($toernooiId, $db){
     }
     //no rounds left
     else{
-        //update rounds and make new wedstrijden
+        //rondes bijwerken en nieuwe wedstrijden maken
         updateRounds($toernooiId, $db);
         
     }
@@ -744,47 +740,47 @@ function postWedstrijden($toernooiId, $db){
 
 }
 
-//make new wedstrijden with updated rounds
-// get wedstrijden
-// get max ronde
-// new ronde = max ronde+1 
-// put results of wedstrijden in array
-// loop over array with for loop
-// get i'th winner and i+1'th winner
-// insert results into database
+//maak nieuwe wedstrijden met bijgewerkte rondes
+// krijg wedstrijden
+// haal max ronde
+// nieuwe ronde = max ronde+1
+// zet resultaten van wedstrijden in de array
+// loop over array met for loop
+// haal de i'de winnaar en de i+1'de winnaar
+// voeg resultaten in database in
 function updateRounds($toernooiId, $db){
-    //3.2.1 get all banen
+    //3.2.1 krijg alle banen
     $arrBanen = getTennisBanen($db);
-    //get highest round
+    //hoogste ronde halen
     $queryGetHighestRound = $db->prepare("SELECT MAX(ronde) as ronde FROM wedstrijd WHERE toernooi_id=?");
     $queryGetHighestRound->execute(array($toernooiId));
-    //fetch highest round
+    //hoogste ronde halen
     $fetchRound = $queryGetHighestRound->fetch(PDO::FETCH_ASSOC);
     $newround = $fetchRound["ronde"]+1;
 
-    //select wedstrijden with highest round
+    //selecteer wedstrijden met hoogste ronde
     $queryGetOldWedstrijden = $db->prepare("SELECT * FROM `wedstrijd` WHERE ronde = (SELECT MAX(ronde) FROM wedstrijd WHERE toernooi_id='".$toernooiId."') AND toernooi_id='".$toernooiId."'");
     $queryGetOldWedstrijden->execute();
 
     //var_dump($queryGetOldWedstrijden);
     $winnerArr = array();
-    //put each result into array
+    //zet elk resultaat in array
     foreach($queryGetOldWedstrijden as $result){
         array_push($winnerArr, $result["winnaar_id"]);
     }
     
     //var_dump($winnerArr);
-    //check if there is only one player left
+    //controleer of er nog maar één speler over is
     if(count($winnerArr)>1){
-        //get pairs of winners
+        //krijg paren van winnaars
         for($i=0; $i<count($winnerArr)-1;$i+=2){
             $winner1 = $winnerArr[$i];
             $winner2 = $winnerArr[$i+1];
-            //3.2.2 get next index from the banen
+            //3.2.2 volgende index ophalen van de banen
             $baan = getNext($arrBanen);
-            //insert new round into database with $winner1, $winner2, $newround and $toernooiId
+            //voeg nieuwe ronde in database in met $winner1, $winner2, $newround en $toernooiId
             $queryInsertWed = $db->prepare("insert into wedstrijd set toernooi_id=?, ronde=?, speler1_id=?, speler2_id=?, baan=?");
-            //3.2.3 insert westrijd with $toernooiId, $newround, $winner1 as speler 1, $winner2 as speler 2, no winner, with an id of baan
+            //3.2.3 voeg westrijd in met $toernooiId, $newround, $winner1 als speler 1, $winner2 als speler 2, geen winnaar, met een id van baan
             $queryInsertWed->execute(array($toernooiId, $newround, $winner1, $winner2, $baan["baan_id"]));
         }
         //reload page after insert
@@ -792,14 +788,14 @@ function updateRounds($toernooiId, $db){
     }
     //no games left to play
     else{
-        //check if there are wedstrijden
+        //check of er wedstrijden zijn
         if(count($winnerArr)>0){
         //get winner 
         $winnerTournament = $winnerArr[0];
-        //set winner as tournament winner in tournament table
+        //stel winnaar in als toernooiwinnaar in toernooitabel
         finishTournament($winnerTournament, $toernooiId, $db);
         $winnaar = getSpelerByID($winnerTournament, $db);
-        //post winnaar on page
+        //post winnaar op pagina
         ?>
         <div class="box-table">
         <h1> Toernooi is afgelopen </h1>
@@ -820,22 +816,22 @@ function updateRounds($toernooiId, $db){
 
 }
 
-//set winID as winner of tournament and finish tournament
+//stel winID in als winnaar van toernooi en beëindig toernooi
 function finishTournament($winId, $tId, $db){
-    //query to update tournament
+    //vraag om toernooi te updaten
     $queryFinishToernooi = $db->prepare("update toernooi set winnaar_id=?, afgesloten=1 WHERE toernooi_id=?");
     $queryFinishToernooi->execute(array($winId, $tId));
 
 }
 
-//3.1.1 return each baan in an array
+//3.1.1 retourneer elke baan in een array
 function getTennisBanen($db){
     
     $baanArr = array();
-    //query to get banen
+    //vraag om banen te krijgen
     $queryBanen = $db->prepare("SELECT * FROM `banen`");
     $queryBanen->execute();
-    //3.1.2 put each baan into array
+    //3.1.2 zet elke baan in array
     foreach($queryBanen as $baan){
         array_push($baanArr, $baan);
     }
@@ -843,34 +839,34 @@ function getTennisBanen($db){
 }
 
 $arrCount = -1;
-//3.1.3 gets next item from array, gets first item if at end of index
+//3.1.3 haalt het volgende item uit de array, krijgt het eerste item als aan het einde van de index
 function getNext($arr){
     //add 1 to $arrCount (the index)
     $GLOBALS["arrCount"] = $GLOBALS["arrCount"]+1;
-    //check if index is not too big
+    //controleer of index niet te groot is
     if($GLOBALS["arrCount"]<=count($arr)-1){
-        //return variable with index $arrCount of $arr
+        //return variabele met index $arrCount van $arr
         $index = $GLOBALS["arrCount"];
         return $arr[$index];
     }else{
-        //index is too big
-        //reset the index($arrCount) to 0 and return 
+        //index is te groot
+        // reset de index ($arrCount) naar 0 en keer terug
         $GLOBALS["arrCount"] = 0;
         $index = $GLOBALS["arrCount"];
         return $arr[$index];
     }
 }
 
-//4.1.1 function to get baan by given Id
+//4.1.1 functie om baan te krijgen door gegeven Id
 function getBaanByID($baanId, $db){
-      //query to select baan with baanId
+      //query baan selecteren met baanId
       $query_select = $db->prepare("SELECT* from banen where baan_id='".$baanId."'");
       $query_select->execute();
-    //number of results from the query
+    //aantal resultaten van de query
     $rows = $query_select->rowCount();
-    //if there are results that means  there is a colomn with given baan ID
+    //als er resultaten zijn, betekent dit dat er een kolom is met een gegeven baan-ID
     if($rows>0) {
-        //get the fetched result, this result will return an array instead of an PDO 
+        //haal het opgehaalde resultaat op, dit resultaat retourneert een array in plaats van een PDO
         $baan= $query_select->fetch(PDO::FETCH_ASSOC);
         return $baan["baannaam"];
     }

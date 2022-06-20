@@ -1,45 +1,41 @@
 <?php
-  //I do this so I can use functions from functions.php
+  
+//Ik doe dit zodat ik functies van functions.php kan gebruiken
   require "functions.php";
 
-  //SET VARIABLES--------------------------------------
   
-  //make connection to Database for data :D
+  //maak verbinding met Database voor gegevens
   try{
     $db = new PDO("mysql:host=localhost;dbname=toernooi;", "root","");
   }
   catch(PDOException $exception)
   {
-    //echo any error with database
+    //echo elke fout met database
       echo $exception->getmessage();
   }
   
-  //-------------------------------------------------------
 ?>
 
-<!-- set up HTML doctype, language, charsets to define page
- make connection to functions_js.js to use Javascript -->
+<!-- HTML-documenttype, taal, tekensets instellen om pagina te definiëren
+ maak verbinding met functions_js.js om Javascript te gebruiken -->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta charset="utf-8">
   <title>Speler gegevens aanpassen</title>
-  <meta name="description" content="toernooi v0">
   <script type="text/javascript" src="functions_js.js"></script>  
 </head>
-<!-- header with title -->
-<body class="back">
+<!-- header met titel -->
+<body>
 <center>
-<div class="box-link">
-      <a href="start.php"><h1 class="whitetext"> Homepagina </h1> </a>
-    </div>
-  <div class="holder">
-  <h1 class="title">Speler gegevens aanpassen</h1>
+<p><a href="start.php">Homepagina</a></p>
+<p><a href="afgesloten.php">spelers aanmelding sluiten</a></p>
+  <h2>Speler gegevens aanpassen</h2>
     </div>
     <?php
-    //post each player with school and name
-    //and two buttons to edit or delete player
+    //post elke speler met school en naam
+    // en twee knoppen om speler te bewerken of te verwijderen
     postEachPlayerForm($db);
     ?>
 </center>

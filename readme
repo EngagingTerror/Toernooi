@@ -1,0 +1,20 @@
+als u de applicatie opstart komt uw op de index.php terecht. 
+op de index.php kan je inloggen en een acount aanmaken.
+na het inloggen komt u op start.php hier kunt u spelers toevoegen of aanpassen en scholen toevoegen en ook nog banen aanmaken.
+spelers toevoegen leid naar de pagina waar spelers gemaakt kunnen worden om scholen in de drop down te krijgen moet u eerst scholen maken in school toevoegen.
+Bij spelers aanpassen kunt u naam en school wijzigen en spelers verwijderen. verwijderen kan alleen maar als de speler niet al in een toernooi zit.
+op de spelers aanpassen pagina heeft ook een link naar spelers aanmelding sluiten deze leid naar afgesloten.php
+school toevoegen daar kan u de namen van de scholen verwerken.
+banen toevoegen daar kunnen banen verwerkt worden
+
+als u bij afgesloten.php komt kan er geen spelers aanmaken worden het zelfde met scholen enzovoort.
+bij toernooi kan je natuurlijk een toernooi aanmaken en ook als u op Kies toernooi klikt op de toernooi pagina.
+komt u bij de al aangemaakte toernooien als u dan een toernooi naar keuze aan klikt kunnen de uitslagen terug gevonden worden.
+bij de wedstrijden paginas kunt ook een toernooi kiezen en dan ziet u alle wedstrijden de uitslagen kunnen hier verwerkt worden en daarna kunt er op update geklikt worden en dan naar volgende rond.
+dat herhaalt uw dan tot er een winnaar is dit is volledig automatische wedstrijden verwerken.
+
+ik hoop dat ik hiermee voldoe aan de eisen van het examen zodat jullie eindelijk van me af zijn.
+
+met vriendelijke groet,
+
+Moreno Martins

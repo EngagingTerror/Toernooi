@@ -1,16 +1,16 @@
-//toggle all checkboxes with class 'checkbox'
+//schakel alle selectievakjes in met klasse 'checkbox'
 function toggleCheckBoxes() {
-    //get all input types with class 'checkbox'
+    //krijg alle invoertypen met klasse 'checkbox'
   checkboxes = document.getElementsByClassName('checkBox');
-  //loop through each checkbox
+  //loop door elk checkbox
   for(var i=0; i<checkboxes.length; i++) {
-    //check if the checkbox if unchecked
+    //controleer of het selectievakje is uitgeschakeld
     if(!checkboxes[i].checked){
-      //check each checkbox
+      //controleer elk checkbox
       checkboxes[i].checked = true;
     }
     else{
-      //if it is checked uncheck it
+      //als het is aangevinkt, vink het dan uit
       checkboxes[i].checked = false;
     }
     
@@ -18,20 +18,20 @@ function toggleCheckBoxes() {
     
 }
 
-//redirect user to link
+//gebruiker omleiden naar link
 function redirect(link){
   window.location.replace(link);
 }
 
-//update values of each <select> box with their wedstrijd_id to the wedstrijd table
+//update waarden van elk <select> vak met hun wedstrijd_id naar de wedstrijdtabel
 function submitValues(){
-  //select all <select> elements with class text-input2
+  //selecteer alle <select> elementen met class text-input2
   selectboxes = document.getElementsByClassName('text-input2');
   
-    //loop through each select box
+    //loop door elke selectiebox
     for(var i=0; i<selectboxes.length; i++) {
-      //console.log(selectboxes);
-      //update the scores of each wedstrijd through an AJAX function
+      //console.log(selectievakjes);
+      //update de scores van elke wedstrijd via een AJAX-functie
       setScores(selectboxes[i].value, selectboxes[i].id);
     }
   //location.reload();
@@ -40,7 +40,7 @@ function submitValues(){
   
 }
 
-//gets the winner, score of player1 and player2 and updates them in database
+//krijgt de winnaar, score van speler1 en speler2 en werkt deze bij in de database
 function setScores(scores, wedstrijdId){
   //0 - 0 Win: Speler 1
     var winner = 0;
@@ -48,38 +48,38 @@ function setScores(scores, wedstrijdId){
     //get score 1 and score 2
     var score1 = scores[0];
     var score2 = scores[4];
-    //check if the scores is equal match
-    //0 - 0 Win: Speler 1 has 18 chars and is an equal match
+    //controleer of de scores gelijk zijn aan elkaar
+    //0 - 0 Win: Speler 1 heeft 18 karakters en is een gelijke match
     if(scores.length>18){
-      //last character is the number of player that won
+      //laatste karakter is het aantal spelers dat heeft gewonnen
       gelijkspel= scores[18]
     }
-    //check the scores to determine who won
+    //controleer de scores om te bepalen wie er heeft gewonnen
     if(score1>score2){
       winner = 1;
     }
     else{
-      //check if they did not play equal
+      //controleer of ze niet gelijk speelden
       if(gelijkspel==0){
         winner = 2;
       }
       else{
-          //referee decided who won with an equal game
+          //scheidsrechter besliste wie er won met een gelijk spel
           winner = gelijkspel;
       }
     }
-    //update wedstrijd with scores and winner based on wedstrijd ID
+    //update wedstrijd met scores en winnaar op basis van wedstrijd ID
     updateValues(score1,score2,winner,wedstrijdId);
 }
 
-//update wedstrijd with wedstrijdID with given parameters using a XMLHTTP request(AJAX)
+//update wedstrijd met wedstrijdID met opgegeven parameters met behulp van een XMLHTTP-verzoek (AJAX)
 function updateValues(score1, score2, winner, wedstrijdId){
-    //XMLHttp variable can get and post data from/to pages
+    //XMLHttp-variabele kan gegevens van/naar pagina's ophalen en posten
     var xhttp = new XMLHttpRequest();
-     //open the API to upload the given data with a POST request
+     //open de API om de gegeven gegevens te uploaden met een POST-verzoek
      xhttp.open("POST", "api/updateGame.php?w="+winner+"&&s1="+score1+"&&s2="+score2+"&&wID="+wedstrijdId);
-      //send the request
+      //stuur het verzoek
       xhttp.send();
-    //reload page
+    //herlaad pagina
     
 }

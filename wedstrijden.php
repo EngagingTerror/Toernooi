@@ -26,18 +26,13 @@
 <head>
   <meta charset="utf-8">
   <title>Wedstrijden</title>
-  <meta name="description" content="toernooi v0">
   <script type="text/javascript" src="functions.js"></script>  
 </head>
 <!-- header with title -->
-<body class="back">
+<body>
 <center>
-<div class="box-link">
-      <a href="start.php"><h1 class="whitetext"> Homepagina </h1> </a>
-    </div>
-    <div class="holder">
+    <p><a href="afgesloten.php">Homepagina</a></p>
         <h1 class="title">Wedstrijden</h1>
-    </div>
     <?php
     //get the toernooi ID from link
     if(isset($_REQUEST["t"])){

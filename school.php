@@ -1,58 +1,49 @@
 <?php
-  //I do this so I can use functions from functions.php
+  //Ik doe dit zodat ik functies uit functions.php kan gebruiken
   require "functions.php";
 
-  //SET VARIABLES--------------------------------------
   
-  //make connection to Database for data :D
+  //verbinding maken met Database voor gegevens
   try{
     $db = new PDO("mysql:host=localhost;dbname=toernooi;", "root","");
   }
   catch(PDOException $exception)
   {
-    //echo any error with database
+    //echo elke fout met database
       echo $exception->getmessage();
   }
   
-  //-------------------------------------------------------
 ?>
 
-<!-- set up HTML doctype, language, charsets to define page
- make connection to functions_js.js to use Javascript -->
+<!-- HTML-documenttype, taal, tekensets instellen om pagina te definiëren
+ maak verbinding met functions_js.js om Javascript te gebruiken -->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta charset="utf-8">
   <title>Scholen Registreren</title>
-  <meta name="description" content="toernooi v0">
   <script type="text/javascript" src="functions_js.js"></script>  
 </head>
-<!-- header with title -->
-<body class="back">
+<!-- header met titel -->
+<body>
 <center>
-<div class="box-link">
-      <a href="start.php"><h1 class="whitetext"> Homepagina </h1> </a>
-    </div>
-    <div class="holder">
-        <h1 class="title">Scholen registreren</h1>
-    </div>
-    <!-- table with registrated schools-->
-  <div class="box-schools">
+<p><a href="start.php">Homepagina</a></p>
+    <h2>Scholen registreren</h2>
+    
+    <!-- table met geregistreerde scholen-->
       <br>
-    <h1> Geregistreerde scholen:</h1>
-    <!-- get schools from database and post each of them -->
+    <h2> Geregistreerde scholen:</h2>
+    <!-- haal scholen uit de database en plaats ze allemaal -->
     <?php
         postEachSchool($db);
     ?>
     <br>
-  </div>
-  <!-- table to registrate schools -->
-    <div class="box-schools-form">
+  <!-- table om scholen in te schrijven -->
         <?php
         postRegistrateForm($db);
         ?>
-    </div>
+    
 </center>
   </body>
 </html>
