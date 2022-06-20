@@ -1,8 +1,14 @@
 <?php
-
+// Initialize the session
 session_start();
-session_unset();
+ 
+// Unset all of the session variables
+$_SESSION = array();
+ 
+// Destroy the session.
 session_destroy();
-
-//gaat terug naar index.php
-header("location: index.php?error=none");
+ 
+// Redirect to index page
+header("location: index.php");
+exit;
+?>
