@@ -58,12 +58,12 @@ CREATE TABLE `banen` (
 -- Tabelstructuur voor tabel `medewerkers`
 --
 
-CREATE TABLE `medewerkers` (
-  `medewerker_id` int(11) NOT NULL,
-  `user` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `pwd` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE users (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+); ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Gegevens worden geëxporteerd voor tabel `medewerkers`
