@@ -30,9 +30,9 @@
   <center>
   <h2>Homepagina</h2>
     <!-- table met alle quicklinks -->
-    <p><a href="spelerToevoegen.php">Spelers toevoegen</a></p>
-    <p><a href="spelerAanpassen.php">Spelers aanpassen</a></p>
-    <p><a href="school.php">School toevoegen</a></p>
+    <p><a href="spelerTV.php">Spelers toevoegen</a></p>
+    <p><a href="spelerAP.php">Spelers aanpassen</a></p>
+    <p><a href="schoolAM.php">School toevoegen</a></p>
     <p><a href="banen.php">Banen toevoegen</a></p>
     <p><a href="logout.php">logout</a></p>
 </center>

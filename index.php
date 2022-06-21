@@ -20,14 +20,14 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
  
     // Controleer of gebruikersnaam leeg is
     if(empty(trim($_POST["username"]))){
-        $username_err = "Please enter username.";
+        $username_err = "Vul hier uw username.";
     } else{
         $username = trim($_POST["username"]);
     }
     
     // Controleer of het wachtwoord leeg is
     if(empty(trim($_POST["password"]))){
-        $password_err = "Please enter your password.";
+        $password_err = "Vul hier uw password.";
     } else{
         $password = trim($_POST["password"]);
     }
@@ -65,15 +65,15 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                             header("location: start.php");
                         } else{
                             // Wachtwoord is niet geldig, geef een algemene foutmelding weer
-                            $login_err = "Invalid username or password.";
+                            $login_err = "Ongeldige username of wachtwoord.";
                         }
                     }
                 } else{
                     // Gebruikersnaam bestaat niet, geef een algemene foutmelding weer
-                    $login_err = "Invalid username or password.";
+                    $login_err = "Ongeldige username of wachtwoord.";
                 }
             } else{
-                echo "Oops! Something went wrong. Please try again later.";
+                echo "Oeps! Er is iets fout gegaan. Probeer het later opnieuw.";
             }
 
             // Verklaring sluiten
@@ -109,14 +109,14 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 <span class="invalid-feedback"><?php echo $username_err; ?></span>
             </div>    
             <div class="form-group">
-                <label>Password</label>
+                <label>Wachtwoord</label>
                 <input type="password" name="password" class="form-control <?php echo (!empty($password_err)) ? 'is-invalid' : ''; ?>">
                 <span class="invalid-feedback"><?php echo $password_err; ?></span>
             </div>
             <div class="form-group">
                 <input type="submit" class="btn btn-primary" value="Login">
             </div>
-            <p>Don't have an account? <a href="register.php">Sign up now</a>.</p>
+            <p>Nog geen account? <a href="register.php">Sign up</a>.</p>
         </form>
     </center>
 </body>

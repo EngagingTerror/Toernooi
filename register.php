@@ -11,9 +11,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
  
     // Gebruikersnaam valideren
     if(empty(trim($_POST["username"]))){
-        $username_err = "Please enter a username.";
+        $username_err = "Vul hier een username in.";
     } elseif(!preg_match('/^[a-zA-Z0-9_]+$/', trim($_POST["username"]))){
-        $username_err = "Username can only contain letters, numbers, and underscores.";
+        $username_err = "Username kan alleen letters, cijfers en underscores bevatten.";
     } else{
         // Een selectieverklaring voorbereiden
         $sql = "SELECT id FROM users WHERE username = :username";
@@ -28,12 +28,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             // Poging om de voorbereide instructie uit te voeren
             if($stmt->execute()){
                 if($stmt->rowCount() == 1){
-                    $username_err = "This username is already taken.";
+                    $username_err = "dit username is al ingebruik.";
                 } else{
                     $username = trim($_POST["username"]);
                 }
             } else{
-                echo "Oops! Something went wrong. Please try again later.";
+                echo "Oeps! Er is iets fout gegaan. Probeer het later opnieuw.";
             }
 
             // Close statement
@@ -43,16 +43,16 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     
     // Wachtwoord valideren
     if(empty(trim($_POST["password"]))){
-        $password_err = "Please enter a password.";     
+        $password_err = "Vul hier een wachtwoord in.";     
     } elseif(strlen(trim($_POST["password"])) < 6){
-        $password_err = "Password must have atleast 6 characters.";
+        $password_err = "Wachtwoord moet minimaal 6 tekens bevatten.";
     } else{
         $password = trim($_POST["password"]);
     }
     
     // Bevestig wachtwoord bevestigen
     if(empty(trim($_POST["confirm_password"]))){
-        $confirm_password_err = "Please confirm password.";     
+        $confirm_password_err = "confirm hier uw wachtwoord.";     
     } else{
         $confirm_password = trim($_POST["confirm_password"]);
         if(empty($password_err) && ($password != $confirm_password)){
@@ -80,7 +80,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 // Redirect to lndex page
                 header("location: index.php");
             } else{
-                echo "Oops! Something went wrong. Please try again later.";
+                echo "Oeps! Er is iets fout gegaan. Probeer het later opnieuw.";
             }
 
             // Close statement

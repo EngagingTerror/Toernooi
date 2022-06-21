@@ -1,8 +1,8 @@
 <?php
-  //Ik doe dit zodat ik functies uit functions.php en functionsToernooiWedstrijd.php kan gebruiken
+  //Ik doe dit zodat ik functies uit functions.php kan gebruiken
   require "functions.php";
-  require "functionsToernooiWedstrijd.php";
 
+  
   //verbinding maken met Database voor gegevens
   try{
     $db = new PDO("mysql:host=localhost;dbname=toernooi;", "root","");
@@ -22,25 +22,28 @@
 
 <head>
   <meta charset="utf-8">
-  <title>Wedstrijden</title>
-  <script type="text/javascript" src="functions.js"></script>  
+  <title>Scholen Registreren</title>
+  <script type="text/javascript" src="functions_js.js"></script>  
 </head>
 <!-- header met titel -->
 <body>
 <center>
-    <p><a href="afgesloten.php">Homepagina</a></p>
-        <h1 class="title">Wedstrijden</h1>
+<p><a href="start.php">Homepagina</a></p>
+    <h2>Scholen registreren</h2>
+    
+    <!-- table met geregistreerde scholen-->
+      <br>
+    <h2> Geregistreerde scholen:</h2>
+    <!-- haal scholen uit de database en plaats ze allemaal -->
     <?php
-    //haal de toernooi-ID uit de link
-    if(isset($_REQUEST["t"])){
-        $toernooiID = $_REQUEST["t"];
-        postWedstrijden($toernooiID, $db);
-    }
-    else{
-        chooseToernooi("wedstrijden.php",$db);
-    }
-
+        postEachSchool($db);
     ?>
-    </center>
+    <br>
+  <!-- table om scholen in te schrijven -->
+        <?php
+        postRegistrateForm($db);
+        ?>
+    
+</center>
   </body>
 </html>

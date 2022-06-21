@@ -1,5 +1,5 @@
 als u de applicatie opstart komt uw op de index.php terecht. 
-op de index.php kan je inloggen en een acount aanmaken.
+op de index.php kan je inloggen en een account aanmaken met de sign up link die leid naar register.php.
 na het inloggen komt u op start.php hier kunt u spelers toevoegen of aanpassen en scholen toevoegen en ook nog banen aanmaken.
 spelers toevoegen leid naar de pagina waar spelers gemaakt kunnen worden om scholen in de drop down te krijgen moet u eerst scholen maken in school toevoegen.
 Bij spelers aanpassen kunt u naam en school wijzigen en spelers verwijderen. verwijderen kan alleen maar als de speler niet al in een toernooi zit.

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Gegenereerd op: 20 jun 2022 om 14:00
+-- Gegenereerd op: 21 jun 2022 om 09:05
 -- Serverversie: 10.4.21-MariaDB
 -- PHP-versie: 8.0.12
 
@@ -37,6 +37,16 @@ CREATE TABLE `aanmeldingen` (
 -- Gegevens worden geëxporteerd voor tabel `aanmeldingen`
 --
 
+INSERT INTO `aanmeldingen` (`aanmelding_id`, `speler_id`, `toernooi_id`) VALUES
+(79, 24, 125),
+(80, 25, 125),
+(81, 26, 125),
+(82, 27, 125),
+(83, 28, 125),
+(84, 29, 125),
+(85, 31, 125),
+(86, 33, 125);
+
 -- --------------------------------------------------------
 
 --
@@ -52,22 +62,10 @@ CREATE TABLE `banen` (
 -- Gegevens worden geëxporteerd voor tabel `banen`
 --
 
--- --------------------------------------------------------
-
---
--- Tabelstructuur voor tabel `medewerkers`
---
-
-CREATE TABLE users (
-    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    username VARCHAR(50) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-); ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Gegevens worden geëxporteerd voor tabel `medewerkers`
---
+INSERT INTO `banen` (`baan_id`, `baannaam`) VALUES
+(8, 'Baan 1'),
+(9, 'Baan 2'),
+(10, 'Baan 3');
 
 -- --------------------------------------------------------
 
@@ -86,16 +84,16 @@ CREATE TABLE `scholen` (
 
 INSERT INTO `scholen` (`school_id`, `schoolnaam`) VALUES
 (2, 'ROCvA'),
-(3, 'ROC TOP');
-(4, 'Da Vinci College');
-(5, 'Drenthe College');
-(6, 'Graafschap College');
-(7, 'Katholiek Onderwijs Vlaanderen');
-(8, 'Rijn Ijssel College');
-(9, 'ROC de Leijgraaf');
-(10, 'ROC Honzon College');
-(11, 'ROC ID College');
-(11, 'ROC Midden Nederland')
+(3, 'ROC TOP'),
+(4, 'Da Vinci College'),
+(5, 'Drenthe College'),
+(6, 'Graafschap College'),
+(7, 'Katholiek Onderwijs Vlaanderen'),
+(8, 'Rijn Ijssel College'),
+(9, 'ROC de Leijgraaf'),
+(10, 'ROC Honzon College'),
+(11, 'ROC ID College'),
+(12, 'ROC Midden Nederland');
 
 -- --------------------------------------------------------
 
@@ -115,6 +113,16 @@ CREATE TABLE `spelers` (
 -- Gegevens worden geëxporteerd voor tabel `spelers`
 --
 
+INSERT INTO `spelers` (`speler_id`, `voornaam`, `tussenvoegsel`, `achternaam`, `school_id`) VALUES
+(24, 'Kemal ', 'Faruk', 'Yildiz', 2),
+(25, 'Estaban', '', 'Frans', 2),
+(26, 'Michael ', '', 'Buitenweg', 2),
+(27, 'kyle', '', 'Morales', 2),
+(28, 'Kevin ', '', 'Martins', 3),
+(29, 'Carmen', '', 'Moreno', 3),
+(31, 'Marc', 'de', 'Jong', 3),
+(33, 'Moreno', '', 'Martins', 2);
+
 -- --------------------------------------------------------
 
 --
@@ -132,6 +140,23 @@ CREATE TABLE `toernooi` (
 
 --
 -- Gegevens worden geëxporteerd voor tabel `toernooi`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Tabelstructuur voor tabel `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `created_at` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Gegevens worden geëxporteerd voor tabel `users`
 --
 
 -- --------------------------------------------------------
@@ -175,12 +200,6 @@ ALTER TABLE `banen`
   ADD PRIMARY KEY (`baan_id`);
 
 --
--- Indexen voor tabel `medewerkers`
---
-ALTER TABLE `medewerkers`
-  ADD PRIMARY KEY (`medewerker_id`);
-
---
 -- Indexen voor tabel `scholen`
 --
 ALTER TABLE `scholen`
@@ -201,6 +220,13 @@ ALTER TABLE `toernooi`
   ADD KEY `winnaar_id` (`winnaar_id`);
 
 --
+-- Indexen voor tabel `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `username` (`username`);
+
+--
 -- Indexen voor tabel `wedstrijd`
 --
 ALTER TABLE `wedstrijd`
@@ -219,43 +245,43 @@ ALTER TABLE `wedstrijd`
 -- AUTO_INCREMENT voor een tabel `aanmeldingen`
 --
 ALTER TABLE `aanmeldingen`
-  MODIFY `aanmelding_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79;
+  MODIFY `aanmelding_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=87;
 
 --
 -- AUTO_INCREMENT voor een tabel `banen`
 --
 ALTER TABLE `banen`
-  MODIFY `baan_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
-
---
--- AUTO_INCREMENT voor een tabel `medewerkers`
---
-ALTER TABLE `medewerkers`
-  MODIFY `medewerker_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `baan_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT voor een tabel `scholen`
 --
 ALTER TABLE `scholen`
-  MODIFY `school_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `school_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT voor een tabel `spelers`
 --
 ALTER TABLE `spelers`
-  MODIFY `speler_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `speler_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT voor een tabel `toernooi`
 --
 ALTER TABLE `toernooi`
-  MODIFY `toernooi_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=125;
+  MODIFY `toernooi_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=126;
+
+--
+-- AUTO_INCREMENT voor een tabel `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT voor een tabel `wedstrijd`
 --
 ALTER TABLE `wedstrijd`
-  MODIFY `wedstrijd_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
+  MODIFY `wedstrijd_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
 
 --
 -- Beperkingen voor geëxporteerde tabellen

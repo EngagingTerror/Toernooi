@@ -61,14 +61,14 @@ function postRegistrateFormPlayer($db,$splrcnt){
                     ));
                 //check if query was succcesful
                 if($result){
-                    echo "<h2> Speler succesvol geregistreerd!</h2>";
+                    echo "<h2> Speler is geregistreerd</h2>";
                 }else{
                     echo "<h2> Er is iets fout gegaan probeer het nog eens :( </h2>";
                 }
             }
         }
         else{
-            echo "<h2> Speler limiet is bereikt (128)</h2>";
+            echo "<h2>het Spelers limiet is bereikt (128)</h2>";
             return false;
         }
 
@@ -80,13 +80,13 @@ function postRegistrateFormPlayer($db,$splrcnt){
 function checkValidityName($voornaam,$tus,$achternaam,$school,$db,$registratie){
     //controleer of strings bestaan
     if(!$voornaam || !$achternaam){
-        echo "<h2> Velden zijn niet gevuld!</h2>";
+        echo "<h2> Velden zijn niet gevuld</h2>";
         return false;
     }
     else{
             //controleer of de string niet langer is dan de maximale lengte in de database
             if(strlen($voornaam)>50||strlen($achternaam)>50||strlen($tus)>20){
-                echo "<h2>Voornaam, tussenvoegsel of achternaam is te lang! Maximaal 50 karakters voor voor- en achternaam. Maximaal 20 voor tussenvoegsel</h2>";
+                echo "<h2>Voornaam, tussenvoegsel of achternaam zijn te lang! Maximaal 50 karakters voor voor- en achternaam. Maximaal 20 voor tussenvoegsel</h2>";
                 return false;
             }
             else{
@@ -158,7 +158,7 @@ function postEachBaan($db){
     $query_baan->execute();
     //2.2.3 post elke baannaam van table
     foreach($query_baan as $baan){
-        ?><br><div class="white-box"><h3><?php echo $baan["baannaam"];?></h3></div><?php
+        ?><div class="white-box"><h3><?php echo $baan["baannaam"];?></h3></div><?php
     }
 }
 
@@ -188,7 +188,7 @@ function postRegistrateFormBaan($db){
 function checkValidityBaan($baan, $db){
     //check if there is a baan
     if(!$baan){
-        echo "<h2> Veld is niet gevuld!</h2>";
+        echo "<h2> Veld is niet gevuld</h2>";
     }
     else{
         //controleer of de string niet langer is dan de maximale lengte in de database
@@ -198,7 +198,7 @@ function checkValidityBaan($baan, $db){
         else{
             //controleer of schoolnaam al bestaat
             if(TableHas("banen", $baan, "baannaam",$db)){
-                echo "<h2>Baan is al geregistreed!</h2>";
+                echo "<h2>Baan is al geregistreed</h2>";
             }
             else{
                     //baannaam is valid
@@ -207,7 +207,7 @@ function checkValidityBaan($baan, $db){
                     $result = $query_insert_baan->execute();
                     //controleer of de query is gelukt
                     if($result){
-                        echo "<h2> Baan succesvol geregistreerd!</h2>";
+                        echo "<h2> Baan is geregistreerd!</h2>";
                         header("Refresh:0");
                     }else{
                         echo "<h2> Er is iets fout gegaan probeer het nog eens :( </h2>";
@@ -235,7 +235,7 @@ function insertSchoolIntoDb($school,$db){
     $result = $query_school_insert->execute();
     //check if query was succcesful
     if($result){
-        echo "<h2> School succesvol geregistreerd!</h2>";
+        echo "<h2> School is geregistreerd!</h2>";
         header("Refresh:0");
     }else{
         echo "<h2> Er is iets fout gegaan probeer het nog eens :( </h2>";
@@ -284,7 +284,7 @@ function postEachPlayerForm($db){
                         $result = $query_speler->execute();
                         //check if query was succcesful
                         if($result){
-                            ?><br><div class="box-terug"><h2> Speler succesvol geupdate!</h2><br><a class="whitetext" href="spelerAanpassen.php"> Terug </a><br><br></div><?php
+                            ?><br><div class="box-terug"><h2> Speler succesvol geupdate!</h2><br><a class="whitetext" href="spelerAP.php"> Terug </a><br><br></div><?php
                         }else{
                             echo "<h2> Er is iets fout gegaan probeer het nog eens!</h2>";
                         }
@@ -373,10 +373,10 @@ function deletePlayer($speler_id, $db){
     $result = $query_del->execute(array($speler_id));
     //controleer of de query met succes is uitgevoerd
     if($result){
-        ?><br><div class="box-terug"><h2> Speler succesvol gedelete!</h2><br><a class="whitetext" href="spelerAanpassen.php"> Terug </a><br><br></div><?php
+        ?><br><div class="box-terug"><h2> Speler succesvol gedelete!</h2><br><a class="whitetext" href="spelerAP.php"> Terug </a><br><br></div><?php
     }
     else{
-        ?><br><div class="box-terug"><h2> Speler is aangemeld bij toernooi!</h2><br><a class="whitetext" href="spelerAanpassen.php"> Terug </a><br><br></div><?php
+        ?><br><div class="box-terug"><h2> Speler is aangemeld bij toernooi!</h2><br><a class="whitetext" href="spelerAP.php"> Terug </a><br><br></div><?php
     }
 }
 
@@ -441,7 +441,7 @@ function postEachSchool($db){
     $query_schools->execute();
     //post elke schoolnaam van  table
     foreach($query_schools as $school){
-        ?><br><div class="white-box"><h3><?php echo $school["schoolnaam"];?></h3></div><?php
+        ?><div class="white-box"><h3><?php echo $school["schoolnaam"];?></h3></div><?php
     }
 
 }
@@ -472,7 +472,7 @@ function checkValiditySchool($school, $db){
     
     //controleer of string bestaat
     if(!$school){
-        echo "<h2> Veld is niet gevuld!</h2>";
+        echo "<h2> Veld is niet gevuld</h2>";
     }
     else{
         //controleer of de string niet langer is dan de maximale lengte in de database
@@ -482,7 +482,7 @@ function checkValiditySchool($school, $db){
         else{
             //controleer of schoolnaam al bestaat
             if(TableHas("scholen", $school, "schoolnaam",$db)){
-                echo "<h2>School is al geregistreed!</h2>";
+                echo "<h2>School is al geregistreed</h2>";
             }
             else{
                 //Ik doe deze controle omdat dit een naam is die ik gebruik bij het organiseren van wedstrijden
@@ -494,14 +494,14 @@ function checkValiditySchool($school, $db){
                     $result = $query_school_insert->execute();
                     //controleer of de query is gelukt
                     if($result){
-                        echo "<h2> School succesvol geregistreerd!</h2>";
+                        echo "<h2> School is geregistreerd</h2>";
                         header("Refresh:0");
                     }else{
                         echo "<h2> Er is iets fout gegaan probeer het nog eens :( </h2>";
                     }
                 }
                 else{
-                    echo "<h2>Andere naam A.U.B.</h2>"; 
+                    echo "<h2>Andere naam</h2>"; 
                 }
 
 

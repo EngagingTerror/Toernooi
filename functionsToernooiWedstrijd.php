@@ -1,172 +1,6 @@
 <?php
 
-//post 2 knoppen
-//1 met toernooi maken en 1 met toernooi kiezen
-function toernooiPage($db){
-    //post form
-    
-    //post table om een ​​nieuw toernooi te maken
-    if(isset($_POST["make"]))
-    {
-        postMakeToernooi($db);
-    }
-    else{
-        //knop die een nieuw toernooi maakt
-        if(isset($_POST["toernooiSubmit"])){
-            //get posted variables
-            $toernooiname = $_POST["toernooiName"];
-            $omschrijving = $_POST["omschrijving"];
-            //check variables
-            if(checkToernooi($toernooiname, $omschrijving, $db)){
-                //insert toernooi
-                insertToernooi($toernooiname, $omschrijving, $db);
-                $toernooi_id = getIdFromToernooiName($toernooiname, $db);
-                //maak een tafel om spelers toe te wijzen aan een toernooi
-                postAanmelden($toernooi_id, $db);
 
-            }
-        }
-        else{
-            //controleer of de aanmeldingsknop is ingedrukt
-            if(isset($_POST["meldAan"])){
-                
-                //controleer of er selectievakjes zijn ingeschakeld
-                if(isset($_POST["speler_id"])){
-                //ID's ophalen om te uploaden naar de aanmeldingstabel
-                        $toernooiId = $_POST["hiddenToernooi"];
-                        $spelerIdArr = $_POST["speler_id"];
-                        $succesfulQueries = 0;
-                //zet elke speler in aanmeldingen 
-                    foreach($spelerIdArr as $spelerId){
-                        if(insertAanmelding($spelerId, $toernooiId, $db))
-                        {
-                            $succesfulQueries++;
-                        }
-                    }
-                    //controleer of alle vragen goed zijn gegaan
-                    //aantal succesvolle queries = het aantal geselecteerde speler-ID's
-                    if($succesfulQueries==count($spelerIdArr)){
-                        ?><br><div class="box-terug"><h2> Toernooi is aangemaakt en spelers zijn aangemeld</h2><br><a class="whitetext" href="toernooi.php"> Terug </a><br><br></div><?php
-                    }
-                    else{
-                        ?><br><div class="box-terug"><h2> Er is iets fout gegaan :(</h2><br><a class="whitetext" href="toernooi.php"> Terug </a><br><br></div><?php
-                    }
-                    //organiseer alle wedstrijden in toernooi
-                    makeWedstrijden($toernooiId,$db);
-                    header("Location: toernooiInzien.php?t=".$toernooiId);
-                }
-                
-            }
-            else{
-                //post table met knoppen om een ​​nieuw toernooi te maken en een toernooi te kiezen
-                ?>
-                <div class="box-table2">
-                <form action="" method="post">
-                        <br>
-                        <input type="submit" name="make" class="submit-btn" value="Maak nieuw toernooi">
-                        <br>
-                        <br>
-                        <div class="submit-btn3"><a href="toernooiInzien.php" class="whitetext">Kies Toernooi</a></div>
-                        <br>
-                        <br>
-                </form>
-                </div>
-                <?php
-            }
-        }
-    }
-
-}
-
-//post table om een ​​toernooi te maken
-function postMakeToernooi($db){
-    //post eerst een form om een ​​toernooi in te voegenpost eerst een formulier om een ​​toernooi in te voegen
-    ?>
-    <div class="box-table2">
-    <form method="post" action=""> 
-        <h2>Toernooi naam:<input type="text" class="text-input" name="toernooiName"></h2>
-        <br><br>
-        <h2>Toernooi omschrijving</h2>
-        <textarea name="omschrijving" rows="5" cols="40"></textarea>
-        <br><br>
-        <input type="submit" class="submit-btn" name="toernooiSubmit" value="Maak toernooi">
-        <br><br>
-    </form>
-    <?php
-}
-
-//controleer of toernooivariabelen geldig zijn
-function checkToernooi($toernooiname, $omschrijving, $db){
-
-    //kijk of er een naam is
-    if(!$toernooiname){
-        echo "<h2> Toernooi naam is niet opgegeven!</h2>";
-        return false;
-    }
-    else{
-        //controleer of toernooinaam de juiste lengte heeft
-        if(strlen($toernooiname)>50){
-            ?><br><div class="box-terug"><h2> Toernooi naam is te lang! (max 50)</h2><br><a class="whitetext" href="toernooi.php"> Terug </a><br><br></div><?php
-            return false;
-        }
-        else{
-            //controleer of $omschrijving de juiste lengte heeft
-            if(strlen($omschrijving)>100){
-                ?><br><div class="box-terug"><h2> Omschrijving is te lang! (max 100)</h2><br><a class="whitetext" href="toernooi.php"> Terug </a><br><br></div><?php
-                return false;
-            }
-            else{
-                //controleer of toernooitabel $toernooiname bevat
-                if(TableHas("toernooi", $toernooiname, "toernooi_naam", $db)){
-                    ?><br><div class="box-terug"><h2> Toernooi bestaat al, probeer een andere naam</h2><br><a class="whitetext" href="toernooi.php"> Terug </a><br><br></div><?php
-                    return false;
-                }
-                else{
-                    return true;
-                }
-
-            }
-        }
-    }
-}
-
-//voegt $toernooinaam en $omschrijving toe aan toernooitabel
-function insertToernooi($toernooiname, $omschrijving, $db){
-    $queryToernooi = $db->prepare("insert into toernooi set toernooi_naam=?, omschrijving=?");
-    $queryToernooi->execute(array($toernooiname, $omschrijving));
-}
-
-//voegt $spelerId en $toernooiId toe aan aanmeldingstabel
-function insertAanmelding($spelerId, $toernooiId, $db){
-    $queryAanmelding = $db->prepare("insert into aanmeldingen set speler_id=?, toernooi_id=?");
-    $result = $queryAanmelding->execute(array($spelerId, $toernooiId));
-    //check if query went well
-    if($result){
-        return true;
-    }else{
-        return false;
-    }
-}
-//krijgt ID van toernooi
-function getIdFromToernooiName($name, $db)
-{
-  //vraag om toernooi_id te selecteren
-  $querySelect = $db->prepare("select toernooi_id from toernooi where toernooi_naam=?");
-  $querySelect->execute(array($name));
-  //aantal resultaten van de query
-  $rows = $querySelect->rowCount();
-  //als er rijen zijn, betekent dit dat er een kolom is met de opgegeven naam
-  if($rows>0) {
-        //haal het opgehaalde resultaat op, dit resultaat retourneert een array in plaats van een PDO 
-        $fetch= $querySelect->fetch(PDO::FETCH_ASSOC);
-        $idRes = $fetch["toernooi_id"];
-        return $idRes;
-  }
-  else{
-    return "no toernooi";
-  }
-
-}
 
 //krijg elke speler en met een selectievakje om speler toe te wijzen aan toernooi met een insert
 //naar de aanmeldingen tafel
@@ -871,4 +705,171 @@ function getBaanByID($baanId, $db){
         return $baan["baannaam"];
     }
     
+}
+//post 2 knoppen
+//1 met toernooi maken en 1 met toernooi kiezen
+function toernooiPage($db){
+    //post form
+    
+    //post table om een ​​nieuw toernooi te maken
+    if(isset($_POST["make"]))
+    {
+        postMakeToernooi($db);
+    }
+    else{
+        //knop die een nieuw toernooi maakt
+        if(isset($_POST["toernooiSubmit"])){
+            //get posted variables
+            $toernooiname = $_POST["toernooiName"];
+            $omschrijving = $_POST["omschrijving"];
+            //check variables
+            if(checkToernooi($toernooiname, $omschrijving, $db)){
+                //insert toernooi
+                insertToernooi($toernooiname, $omschrijving, $db);
+                $toernooi_id = getIdFromToernooiName($toernooiname, $db);
+                //maak een tafel om spelers toe te wijzen aan een toernooi
+                postAanmelden($toernooi_id, $db);
+
+            }
+        }
+        else{
+            //controleer of de aanmeldingsknop is ingedrukt
+            if(isset($_POST["meldAan"])){
+                
+                //controleer of er selectievakjes zijn ingeschakeld
+                if(isset($_POST["speler_id"])){
+                //ID's ophalen om te uploaden naar de aanmeldingstabel
+                        $toernooiId = $_POST["hiddenToernooi"];
+                        $spelerIdArr = $_POST["speler_id"];
+                        $succesfulQueries = 0;
+                //zet elke speler in aanmeldingen 
+                    foreach($spelerIdArr as $spelerId){
+                        if(insertAanmelding($spelerId, $toernooiId, $db))
+                        {
+                            $succesfulQueries++;
+                        }
+                    }
+                    //controleer of alle vragen goed zijn gegaan
+                    //aantal succesvolle queries = het aantal geselecteerde speler-ID's
+                    if($succesfulQueries==count($spelerIdArr)){
+                        ?><br><div class="box-terug"><h2> Toernooi is aangemaakt en spelers zijn aangemeld</h2><br><a class="whitetext" href="toernooi.php"> Terug </a><br><br></div><?php
+                    }
+                    else{
+                        ?><br><div class="box-terug"><h2> Er is iets fout gegaan :(</h2><br><a class="whitetext" href="toernooi.php"> Terug </a><br><br></div><?php
+                    }
+                    //organiseer alle wedstrijden in toernooi
+                    makeWedstrijden($toernooiId,$db);
+                    header("Location: toernooiIZ.php?t=".$toernooiId);
+                }
+                
+            }
+            else{
+                //post table met knoppen om een ​​nieuw toernooi te maken en een toernooi te kiezen
+                ?>
+                <div class="box-table2">
+                <form action="" method="post">
+                        <br>
+                        <input type="submit" name="make" class="submit-btn" value="Maak nieuw toernooi">
+                        <br>
+                        <br>
+                        <div class="submit-btn3"><a href="toernooiIZ.php" class="whitetext">Kies Toernooi</a></div>
+                        <br>
+                        <br>
+                </form>
+                </div>
+                <?php
+            }
+        }
+    }
+
+}
+
+//post table om een ​​toernooi te maken
+function postMakeToernooi($db){
+    //post eerst een form om een ​​toernooi in te voegenpost eerst een formulier om een ​​toernooi in te voegen
+    ?>
+    <div class="box-table2">
+    <form method="post" action=""> 
+        <h2>Toernooi naam:<input type="text" class="text-input" name="toernooiName"></h2>
+        <br><br>
+        <h2>Toernooi omschrijving</h2>
+        <textarea name="omschrijving" rows="5" cols="40"></textarea>
+        <br><br>
+        <input type="submit" class="submit-btn" name="toernooiSubmit" value="Maak toernooi">
+        <br><br>
+    </form>
+    <?php
+}
+
+//controleer of toernooivariabelen geldig zijn
+function checkToernooi($toernooiname, $omschrijving, $db){
+
+    //kijk of er een naam is
+    if(!$toernooiname){
+        echo "<h2> Toernooi naam is niet opgegeven</h2>";
+        return false;
+    }
+    else{
+        //controleer of toernooinaam de juiste lengte heeft
+        if(strlen($toernooiname)>50){
+            ?><br><div class="box-terug"><h2> Toernooi naam is te lang! (max 50)</h2><br><a class="whitetext" href="toernooi.php"> Terug </a><br><br></div><?php
+            return false;
+        }
+        else{
+            //controleer of $omschrijving de juiste lengte heeft
+            if(strlen($omschrijving)>100){
+                ?><br><div class="box-terug"><h2> Omschrijving is te lang! (max 100)</h2><br><a class="whitetext" href="toernooi.php"> Terug </a><br><br></div><?php
+                return false;
+            }
+            else{
+                //controleer of toernooitabel $toernooiname bevat
+                if(TableHas("toernooi", $toernooiname, "toernooi_naam", $db)){
+                    ?><br><div class="box-terug"><h2> Toernooi bestaat al, probeer een andere naam</h2><br><a class="whitetext" href="toernooi.php"> Terug </a><br><br></div><?php
+                    return false;
+                }
+                else{
+                    return true;
+                }
+
+            }
+        }
+    }
+}
+
+//voegt $toernooinaam en $omschrijving toe aan toernooitabel
+function insertToernooi($toernooiname, $omschrijving, $db){
+    $queryToernooi = $db->prepare("insert into toernooi set toernooi_naam=?, omschrijving=?");
+    $queryToernooi->execute(array($toernooiname, $omschrijving));
+}
+
+//voegt $spelerId en $toernooiId toe aan aanmeldingstabel
+function insertAanmelding($spelerId, $toernooiId, $db){
+    $queryAanmelding = $db->prepare("insert into aanmeldingen set speler_id=?, toernooi_id=?");
+    $result = $queryAanmelding->execute(array($spelerId, $toernooiId));
+    //check if query went well
+    if($result){
+        return true;
+    }else{
+        return false;
+    }
+}
+//krijgt ID van toernooi
+function getIdFromToernooiName($name, $db)
+{
+  //vraag om toernooi_id te selecteren
+  $querySelect = $db->prepare("select toernooi_id from toernooi where toernooi_naam=?");
+  $querySelect->execute(array($name));
+  //aantal resultaten van de query
+  $rows = $querySelect->rowCount();
+  //als er rijen zijn, betekent dit dat er een kolom is met de opgegeven naam
+  if($rows>0) {
+        //haal het opgehaalde resultaat op, dit resultaat retourneert een array in plaats van een PDO 
+        $fetch= $querySelect->fetch(PDO::FETCH_ASSOC);
+        $idRes = $fetch["toernooi_id"];
+        return $idRes;
+  }
+  else{
+    return "no toernooi";
+  }
+
 }
